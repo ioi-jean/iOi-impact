@@ -1,1 +1,784 @@
-# ioi-impact
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iOi Impact Hub</title>
+<style>
+  :root {
+    --tan: #D0C8BB;
+    --yellow: #FFC030;
+    --blue: #00ABD8;
+    --red: #E4101B;
+    --purple: #595696;
+    --pink: #F7BCCB;
+    --orange: #F37D25;
+    --brown: #85746E;
+    --teal: #009A78;
+
+    --paper: #FBF8F3;
+    --panel: #F3EEE5;
+    --ink: #2A2521;
+    --ink-soft: #5B5450;
+
+    --font: Verdana, Geneva, sans-serif;
+    --radius: 20px;
+    --maxw: 1040px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Top switcher ---------- */
+  .topbar {
+    background: var(--paper);
+    border-bottom: 1px solid rgba(42,37,33,0.08);
+    padding: 14px 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .brand { font-weight: 700; font-size: 0.98rem; cursor: pointer; }
+  nav.switcher { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  nav.switcher button {
+    font-family: var(--font);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 600;
+    font-size: 0.86rem;
+    color: #241f1c;
+    padding: 8px 15px 8px 13px;
+    border-radius: 999px;
+    background: var(--panel);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  nav.switcher button .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.25); }
+  nav.switcher button:hover { transform: translateY(-2px); }
+  nav.switcher button[data-p="overview"] { background: var(--teal); color: #fff; }
+  nav.switcher button[data-p="overview"] .dot { background: rgba(255,255,255,0.65); }
+  nav.switcher button[data-p="pop"] { background: var(--red); color: #fff; }
+  nav.switcher button[data-p="pop"] .dot { background: rgba(255,255,255,0.65); }
+  nav.switcher button[data-p="dop"] { background: var(--purple); color: #fff; }
+  nav.switcher button[data-p="dop"] .dot { background: rgba(255,255,255,0.65); }
+  nav.switcher button[data-p="steam"] { background: var(--blue); color: #fff; }
+  nav.switcher button[data-p="steam"] .dot { background: rgba(255,255,255,0.65); }
+  nav.switcher button[data-p="sparks"] { background: var(--orange); color: #fff; }
+  nav.switcher button[data-p="sparks"] .dot { background: rgba(255,255,255,0.65); }
+  nav.switcher button[data-p="cases"] { background: var(--yellow); color: #241f1c; }
+  nav.switcher button.active { opacity: 1; box-shadow: 0 0 0 2px rgba(42,37,33,0.55) inset; }
+  nav.switcher button:not(.active) { opacity: 0.82; }
+
+  .page { display: none; }
+  .page.active { display: block; animation: rise 0.4s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    background: var(--panel);
+    border-bottom: 1px solid rgba(42,37,33,0.08);
+    padding: 56px 0 40px;
+  }
+  header.hero.region { background: var(--region-tint, var(--panel)); }
+
+  .eyebrow { font-size: 0.95rem; color: var(--teal); font-weight: 600; margin: 0 0 6px; }
+  header.hero.region .eyebrow { color: var(--region-color, var(--teal)); }
+
+  h1 { font-size: clamp(2.1rem, 5vw, 3.1rem); font-weight: 700; margin: 0 0 14px; letter-spacing: -0.01em; }
+
+  .hero-intro { max-width: 66ch; font-size: 1.08rem; color: var(--ink-soft); margin: 0 0 34px; }
+
+  nav.cycle { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; list-style: none; margin: 0; }
+  nav.cycle button {
+    font-family: var(--font);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: #241f1c;
+    padding: 10px 18px 10px 16px;
+    border-radius: 999px;
+    background: var(--stage-color, var(--teal));
+    opacity: 0;
+    animation: enter 0.5s ease forwards;
+    transition: transform 0.15s ease;
+  }
+  nav.cycle button:hover { transform: translateY(-2px); }
+  nav.cycle .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.65); }
+  nav.cycle button:nth-child(1) { animation-delay: 0.02s; }
+  nav.cycle button:nth-child(2) { animation-delay: 0.09s; }
+  nav.cycle button:nth-child(3) { animation-delay: 0.16s; }
+  nav.cycle button:nth-child(4) { animation-delay: 0.23s; }
+  nav.cycle button:nth-child(5) { animation-delay: 0.30s; }
+  @keyframes enter { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- Section scaffolding ---------- */
+  section { padding: 56px 0; }
+  section + section { border-top: 1px solid rgba(42,37,33,0.08); }
+
+  h2 { font-size: clamp(1.5rem, 3vw, 1.9rem); font-weight: 700; margin: 0 0 10px; }
+  .section-lede { color: var(--ink-soft); max-width: 70ch; margin: 0 0 32px; }
+
+  /* ---------- Stat grid (flexible count) ---------- */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 10px; }
+  .stat-grid div { background: var(--paper); border-radius: var(--radius); padding: 20px 18px; }
+  .stat-grid strong { display: block; font-size: 1.4rem; font-weight: 700; color: var(--stat-color, var(--teal)); line-height: 1.25; }
+  .stat-grid span { font-size: 0.82rem; color: var(--ink-soft); }
+
+  /* ---------- Programme cards on overview ---------- */
+  .prog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .prog-tile {
+    font-family: var(--font);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    border-radius: var(--radius);
+    padding: 24px 24px 22px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: transform 0.15s ease;
+  }
+  .prog-tile:hover { transform: translateY(-3px); }
+  .prog-tile.pop { background: var(--red); }
+  .prog-tile.dop { background: var(--purple); }
+  .prog-tile.steam { background: var(--blue); }
+  .prog-tile.sparks { background: var(--orange); }
+  .prog-tile.cases { background: #B27F00; }
+  .prog-tile .tile-tag { font-size: 0.78rem; font-weight: 600; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.03em; }
+  .prog-tile .tile-name { font-size: 1.3rem; font-weight: 700; }
+  .prog-tile .tile-desc { font-size: 0.92rem; opacity: 0.92; }
+
+  /* ---------- Quote grid ---------- */
+  .quote-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .quote-card { background: var(--panel); border-radius: 16px; padding: 22px 24px; border-left: 8px solid var(--teal); }
+  .quote-card blockquote { margin: 0 0 12px; font-size: 1.02rem; font-style: italic; }
+  .quote-card cite { display: block; font-size: 0.82rem; color: var(--ink-soft); font-style: normal; }
+
+  /* ---------- Programme cards (mirrors region-card) ---------- */
+  .prog-card { background: var(--panel); border-radius: 16px; padding: 28px 28px 26px; margin-bottom: 22px; border-left: 8px solid var(--teal); }
+  .prog-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+  .prog-head h3 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+  .flex-tag { font-size: 0.78rem; font-weight: 600; color: #fff; background: var(--teal); padding: 5px 12px; border-radius: 999px; white-space: nowrap; }
+  .prog-sub { margin: 0 0 16px; color: var(--ink-soft); font-style: italic; font-size: 0.95rem; }
+  .prog-block { margin-bottom: 14px; }
+  .prog-block:last-child { margin-bottom: 0; }
+  .prog-block h4 { margin: 0 0 6px; font-size: 0.85rem; font-weight: 600; color: var(--brown); }
+  .prog-block p, .prog-block ul { margin: 0; font-size: 0.96rem; }
+  .prog-block ul { padding-left: 18px; }
+  .prog-block li { margin-bottom: 4px; }
+
+  /* ---------- Case study grid ---------- */
+  .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .case-card { background: var(--panel); border-radius: 16px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px; border-left: 8px solid var(--yellow); }
+  .case-card a.case-title { color: var(--ink); font-weight: 700; font-size: 1.02rem; text-decoration: none; }
+  .case-card a.case-title:hover { text-decoration: underline; color: var(--teal); }
+  .case-card .case-title.disabled { color: var(--ink); }
+  .case-meta { font-size: 0.8rem; color: var(--ink-soft); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .perm-tag { display: inline-flex; align-items: center; font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--tan); color: var(--ink); }
+  .perm-tag.marketing { background: var(--teal); color: #fff; }
+  .perm-tag.funder { background: var(--brown); color: #fff; }
+  .perm-tag.pending { background: var(--panel); color: var(--ink-soft); border: 1px dashed var(--ink-soft); }
+
+  .note { margin-top: 18px; font-size: 0.95rem; color: var(--ink-soft); border-left: 3px solid var(--orange); padding-left: 14px; }
+  .note strong { color: var(--ink); }
+
+  .backlink { font-family: var(--font); background: none; border: none; cursor: pointer; padding: 0; font-size: 0.9rem; font-weight: 600; color: var(--teal); margin-bottom: 18px; }
+
+  .prevnext { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding-top: 8px; }
+  .prevnext button { font-family: var(--font); font-weight: 700; font-size: 0.92rem; border: none; cursor: pointer; padding: 12px 20px; border-radius: 999px; background: var(--panel); color: var(--ink); }
+  .prevnext button:hover { background: var(--tan); }
+
+  footer { padding: 40px 0 60px; text-align: center; }
+  footer p { max-width: 64ch; margin: 0 auto; color: var(--ink-soft); font-size: 0.95rem; }
+
+  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .filter-row button {
+    font-family: var(--font); border: none; cursor: pointer; font-weight: 600; font-size: 0.84rem;
+    padding: 8px 16px; border-radius: 999px; background: var(--panel); color: var(--ink);
+    transition: transform 0.15s ease;
+  }
+  .filter-row button:hover { transform: translateY(-2px); }
+  .filter-row button.active { background: var(--teal); color: #fff; }
+  .case-card[data-hidden="true"] { display: none; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand" onclick="go('overview')">iOi Impact Hub</span>
+    <nav class="switcher">
+      <button data-p="overview" onclick="go('overview')"><span class="dot"></span>Overview</button>
+      <button data-p="pop" onclick="go('pop')"><span class="dot"></span>Power of Play</button>
+      <button data-p="dop" onclick="go('dop')"><span class="dot"></span>Day of Play</button>
+      <button data-p="steam" onclick="go('steam')"><span class="dot"></span>STEAM Programmes</button>
+      <button data-p="sparks" onclick="go('sparks')"><span class="dot"></span>Creative Sparks</button>
+      <button data-p="cases" onclick="go('cases')"><span class="dot"></span>Case Studies</button>
+    </nav>
+  </div>
+</div>
+
+<!-- ================= OVERVIEW ================= -->
+<div class="page active" id="page-overview">
+
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Institute of Imagination</p>
+      <h1>Impact Hub</h1>
+      <p class="hero-intro">
+        A live view of the evidence iOi has gathered across every programme — the
+        numbers, the quotes and the case studies that show what happens when children
+        are given the space to imagine, make and play.
+      </p>
+      <div class="stat-grid">
+        <div><strong>17,620</strong><span>children worked with in 2024</span></div>
+        <div><strong>1,071</strong><span>teachers &amp; educators worked with</span></div>
+        <div><strong>96</strong><span>schools worked with in 2024</span></div>
+        <div><strong>16</strong><span>case studies &amp; stories on record</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="programmes">
+    <div class="wrap">
+      <h2>Explore by programme</h2>
+      <p class="section-lede">Each programme has its own toolkit and evidence base — dip into the numbers, the voices, and the stories behind them.</p>
+      <div class="prog-grid">
+        <button class="prog-tile pop" onclick="go('pop')">
+          <span class="tile-tag">Flagship</span>
+          <span class="tile-name">Power of Play</span>
+          <span class="tile-desc">Creative thinking, play frequency and holistic skills — for children and teachers alike.</span>
+        </button>
+        <button class="prog-tile dop" onclick="go('dop')">
+          <span class="tile-tag">School sessions</span>
+          <span class="tile-name">Day of Play</span>
+          <span class="tile-desc">How children respond in the moment — fun, curiosity, and playing with others.</span>
+        </button>
+        <button class="prog-tile steam" onclick="go('steam')">
+          <span class="tile-tag">STEAM Live &amp; more</span>
+          <span class="tile-name">STEAM Programmes</span>
+          <span class="tile-desc">Creative thinking in the classroom, coding confidence and new career aspirations.</span>
+        </button>
+        <button class="prog-tile sparks" onclick="go('sparks')">
+          <span class="tile-tag">With teachers</span>
+          <span class="tile-name">Creative Sparks</span>
+          <span class="tile-desc">Teacher-reported shifts in engagement, autonomy and confidence in the classroom.</span>
+        </button>
+        <button class="prog-tile cases" onclick="go('cases')">
+          <span class="tile-tag">Stories</span>
+          <span class="tile-name">Case Studies</span>
+          <span class="tile-desc">Named stories from children, teachers, schools and partners, with permission status.</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="voices">
+    <div class="wrap">
+      <h2>Voices from across iOi</h2>
+      <p class="section-lede">A sample of what caregivers, teachers, partners and donors have told us. Full quote sets by programme are on each programme page.</p>
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;I really enjoyed being a kid again.&rdquo;</blockquote>
+          <cite>Caregiver — Power of Play, 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--purple);">
+          <blockquote>&ldquo;It was the funnest school day ever!!!&rdquo;</blockquote>
+          <cite>Child — Day of Play, 2024</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--blue);">
+          <blockquote>&ldquo;The world needs innovation and, more importantly, innovative people. Imagination and creativity are exactly what's needed to succeed.&rdquo;</blockquote>
+          <cite>Child, 10 — St Luke's Primary School, Newham, London — STEAM Programmes, 2024</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--orange);">
+          <blockquote>&ldquo;One of my students used to throw his work in the bin or punch a wall — but without a fixed goal to fail against, he was able to engage fully.&rdquo;</blockquote>
+          <cite>Teacher — Creative Sparks, 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--teal);">
+          <blockquote>&ldquo;We couldn't wish for a better partner than the iOi. Their drive, passion and creativity are fundamental to our work, enabling us to engage more children and create an even greater impact...&rdquo;</blockquote>
+          <cite>Sarah Macshane, Social Responsibility UK, The LEGO Group — Partner, 2024</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--brown);">
+          <blockquote>&ldquo;Supporting the iOi has been genuinely transformative, not just for the children, but for me too. I've seen first-hand how my support helps unlock potential in young people who might otherwise...&rdquo;</blockquote>
+          <cite>Karen Janke — Donor, 2024</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p>Institute of Imagination — Impact Hub. Built from the iOi Impact Data tracker (Observations, Quotes, Evidence and Case Studies). Data current as of the last export.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ================= POWER OF PLAY ================= -->
+<div class="page" id="page-pop">
+  <header class="hero region" style="--region-tint:#FBEAE7; --region-color:var(--red);">
+    <div class="wrap">
+      <button class="backlink" onclick="go('overview')">← Back to overview</button>
+      <p class="eyebrow">Flagship programme</p>
+      <h1>Power of Play</h1>
+      <p class="hero-intro">
+        Measured through the Divergent Association Task and The LEGO Foundation's
+        Holistic Skills framework, tracking creative thinking, play frequency and core
+        cognitive and physical skills — in children and in the teachers who deliver alongside them.
+      </p>
+      <div class="stat-grid">
+        <div><strong style="color:var(--red)">100%</strong><span>increase in children's creative thinking skills (DAT)</span></div>
+        <div><strong style="color:var(--red)">300%</strong><span>increase in children's frequency of play</span></div>
+        <div><strong style="color:var(--red)">92%</strong><span>increase in teachers' creative thinking skills (DAT)</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>Skills growth</h2>
+      <p class="section-lede">The LEGO Foundation's Holistic Skills framework, 2024.</p>
+      <div class="stat-grid" style="--stat-color:var(--red);">
+        <div><strong>47%</strong><span>growth in Problem-Solving (Cognitive Skills)</span></div>
+        <div><strong>53%</strong><span>growth in Build and Make (Physical Skills)</span></div>
+        <div><strong>38%</strong><span>growth in Staying Focused (Cognitive Skills)</span></div>
+      </div>
+
+      <div class="prog-card" data-tone="pop" style="border-left-color:var(--red); margin-top:28px;">
+        <div class="prog-head">
+          <h3>Skills children identify in themselves</h3>
+          <span class="flex-tag" style="background:var(--red);">Qualitative</span>
+        </div>
+        <div class="prog-block">
+          <p>Teamwork, Creativity, Craftsmanship, Motivation, Trial &amp; Error, Confidence, Computing skills, Kindness.</p>
+        </div>
+      </div>
+
+      <h2 style="margin-top:36px;">In their own words</h2>
+      <p class="section-lede">Caregivers, teachers and partners on Power of Play.</p>
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;I really enjoyed being a kid again.&rdquo;</blockquote>
+          <cite>Thomas Buxton, Caregiver — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;We are definitely going to try this again at home.&rdquo;</blockquote>
+          <cite>Thomas Buxton, Caregiver — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;Thanks again for this morning, the kids and their parents were buzzing after the session and one of them came back to talk to me about it again this afternoon! I'm amazed at what you managed to achieve in an hour!&rdquo;</blockquote>
+          <cite>Cayley, Teacher — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;It was inspiring to watch them generate ideas so freely…This workshop showed just how much potential they have when given the space to explore.&rdquo;</blockquote>
+          <cite>Laura Carrasco Rodriguez, Teacher — Bonner Primary School, 2024</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;Learning Through Play is more interactive... it's a feeling that you're doing something.&rdquo;</blockquote>
+          <cite>Caregiver — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;It's back to simple things… overstimulation is such a huge thing… so we rotate toys like a toy library.&rdquo;</blockquote>
+          <cite>Caregiver — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;You just have to take that moment… bring your inner child out. And they love it. They love you being playful.&rdquo;</blockquote>
+          <cite>Caregiver — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;Imagination needs things—like time and space.&rdquo;</blockquote>
+          <cite>Caregiver — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--red);">
+          <blockquote>&ldquo;We couldn't wish for a better partner than the iOi. Their drive, passion and creativity are fundamental to our work, enabling us to engage more children and create an even greater impact...&rdquo;</blockquote>
+          <cite>Sarah Macshane, Social Responsibility UK, The LEGO Group — Partner, 2024</cite>
+        </div>
+      </div>
+
+      <p class="note"><strong>Also on record:</strong> a Power of Play impact report (Partner-facing, 2024, cleared for Marketing use) and Samar Majeed's talking-head video from Bonner Primary School (Teacher, 2025, cleared for Marketing use) — see Case Studies.</p>
+
+      <div class="prevnext">
+        <button onclick="go('overview')">← Overview</button>
+        <button onclick="go('dop')">Day of Play →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= DAY OF PLAY ================= -->
+<div class="page" id="page-dop">
+  <header class="hero region" style="--region-tint:#EFEDF9; --region-color:var(--purple);">
+    <div class="wrap">
+      <button class="backlink" onclick="go('overview')">← Back to overview</button>
+      <p class="eyebrow">School sessions</p>
+      <h1>Day of Play</h1>
+      <p class="hero-intro">
+        Single-day sessions measured with The LEGO Foundation's Holistic Skills
+        framework, capturing how children feel about the day itself — whether it was
+        fun, whether they'd try it again, and whether it gave them a chance to play
+        and build with others.
+      </p>
+      <div class="stat-grid" style="--stat-color:var(--purple);">
+        <div><strong>93%</strong><span>agreed or strongly agreed Day of Play was fun</span></div>
+        <div><strong>87%</strong><span>agreed or strongly agreed they'd give Day of Play a try</span></div>
+        <div><strong>77%</strong><span>agreed Day of Play let them play with others</span></div>
+        <div><strong>64%</strong><span>agreed they felt curious about Day of Play</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>What children said</h2>
+      <p class="section-lede">Feedback gathered directly from children after their Day of Play session, 2024.</p>
+
+      <div class="prog-card" style="border-left-color:var(--purple);">
+        <div class="prog-head">
+          <h3>Why was learning through play important?</h3>
+          <span class="flex-tag" style="background:var(--purple);">Child feedback</span>
+        </div>
+        <div class="prog-block">
+          <ul>
+            <li>&ldquo;It teaches you to work together and it taught me how to code things.&rdquo;</li>
+            <li>&ldquo;We need a break from learning and to be creative and just express our imagination freely.&rdquo;</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:var(--purple);">
+        <div class="prog-head">
+          <h3>What's the best thing that happened in the Day of Play?</h3>
+          <span class="flex-tag" style="background:var(--purple);">Child feedback</span>
+        </div>
+        <div class="prog-block">
+          <ul>
+            <li>&ldquo;When we accidentally made a mistake in our building and we had to remake it, and it turned out better.&rdquo;</li>
+            <li>&ldquo;The best thing was when my partner and I built something together, and it actually worked!&rdquo;</li>
+            <li>&ldquo;I made a new friend, and we built a project together.&rdquo;</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:var(--purple);">
+          <blockquote>&ldquo;It was the funnest school day ever!!!&rdquo;</blockquote>
+          <cite>Child — 2024</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--purple);">
+          <blockquote>&ldquo;It was fun and a nice opportunity to make a project that wasn't still, it was actually moving and also looked AMAZING!&rdquo;</blockquote>
+          <cite>Child — 2024</cite>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="go('pop')">← Power of Play</button>
+        <button onclick="go('steam')">STEAM Programmes →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= STEAM PROGRAMMES ================= -->
+<div class="page" id="page-steam">
+  <header class="hero region" style="--region-tint:#E4F6FB; --region-color:var(--blue);">
+    <div class="wrap">
+      <button class="backlink" onclick="go('overview')">← Back to overview</button>
+      <p class="eyebrow">STEAM Live and related</p>
+      <h1>STEAM Programmes</h1>
+      <p class="hero-intro">
+        The broadest toolkit of any programme — the Divergent Association Task, the
+        8 Core Competencies framework, the Millennium Cohort Study, Net Promoter
+        Score and MicroBit Foundation coding-skills measures, tracking creative
+        thinking, career aspirations and coding confidence.
+      </p>
+      <div class="stat-grid" style="--stat-color:var(--blue);">
+        <div><strong>83%</strong><span>of STEAM Live classrooms saw an increase in creative thinking (DAT)</span></div>
+        <div><strong>25%</strong><span>of students raised their occupational aspirations</span></div>
+        <div><strong>45%</strong><span>could imagine a job of the future not yet invented</span></div>
+        <div><strong>60</strong><span>NPS score — teachers recommending STEAM Live</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>Coding confidence &amp; competencies</h2>
+      <p class="section-lede">2023 cohort.</p>
+      <div class="stat-grid" style="--stat-color:var(--blue);">
+        <div><strong>85%</strong><span>said the micro:bit made them think they could be creative with coding</span></div>
+        <div><strong>62%</strong><span>said the micro:bit made them think anyone can code</span></div>
+        <div><strong>54%</strong><span>had mentioned iOi to a family member</span></div>
+      </div>
+      <p class="note"><strong>Top 3 competencies (8 Core Competencies framework):</strong> Creativity (76%), Collaboration (63%), Communication (53%). Teachers separately ranked Creativity, Curiosity and Communication as the top three skills they saw shift after the iOi intervention.</p>
+
+      <div class="prog-card" style="border-left-color:var(--blue); margin-top:28px;">
+        <div class="prog-head">
+          <h3>New STEAM career aspirations</h3>
+          <span class="flex-tag" style="background:var(--blue);">Millennium Cohort Study, 2024</span>
+        </div>
+        <div class="prog-block">
+          <ul>
+            <li>Computer Scientist, Coder, Engineer, Inventor</li>
+            <li>Astronaut, Surgeon, Mathematician</li>
+            <li>Game Designer, LEGO Architect, Robotics Creator</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:var(--blue);">
+        <div class="prog-head">
+          <h3>Jobs of the future, imagined by children</h3>
+          <span class="flex-tag" style="background:var(--blue);">2023</span>
+        </div>
+        <div class="prog-block">
+          <p>Bio archaeologist of space, professional cloud catcher, planet chaser, a person who switches old cars to electric cars, a traveller to Mars, an AI maker.</p>
+        </div>
+      </div>
+
+      <h2 style="margin-top:36px;">In their own words</h2>
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:var(--blue);">
+          <blockquote>&ldquo;The world needs innovation and, more importantly, innovative people. Imagination and creativity are exactly what's needed to succeed.&rdquo;</blockquote>
+          <cite>Student, 10 — St Luke's Primary School, Newham, London, 2024</cite>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="go('dop')">← Day of Play</button>
+        <button onclick="go('sparks')">Creative Sparks →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= CREATIVE SPARKS ================= -->
+<div class="page" id="page-sparks">
+  <header class="hero region" style="--region-tint:#FDEEE0; --region-color:var(--orange);">
+    <div class="wrap">
+      <button class="backlink" onclick="go('overview')">← Back to overview</button>
+      <p class="eyebrow">Working with teachers</p>
+      <h1>Creative Sparks</h1>
+      <p class="hero-intro">
+        A teacher-facing programme — the evidence so far is entirely qualitative,
+        drawn directly from teacher feedback about what changes in their own classroom
+        practice and in how their students engage.
+      </p>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>What teachers said</h2>
+      <p class="section-lede">Cohort 1 feedback, 2025.</p>
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:var(--orange);">
+          <blockquote>&ldquo;I found the collaboration with peers useful. I think some of the activities we have done could be useful for in school projects. It has given me motivation to carry on thinking about learning creatively.&rdquo;</blockquote>
+          <cite>Teacher — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--orange);">
+          <blockquote>&ldquo;One of my students used to throw his work in the bin or punch a wall — but without a fixed goal to fail against, he was able to engage fully.&rdquo;</blockquote>
+          <cite>Teacher — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--orange);">
+          <blockquote>&ldquo;The most significant impact is just knowing what's out there that we can actually use in the classroom.&rdquo;</blockquote>
+          <cite>Teacher — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--orange);">
+          <blockquote>&ldquo;Giving my students the independence and freedom to experiment has made them more engaged — even if the outcome wasn't perfect, the learning was.&rdquo;</blockquote>
+          <cite>Teacher — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--orange);">
+          <blockquote>&ldquo;Now there's much more autonomy, my students are able to express themselves and their identity within lessons.&rdquo;</blockquote>
+          <cite>Teacher — 2025</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:var(--orange);">
+          <blockquote>&ldquo;I was nervous about doing the activities myself, but now I've learned how and developed the skills, I can use it with my class.&rdquo;</blockquote>
+          <cite>Teacher — 2025</cite>
+        </div>
+      </div>
+      <p class="note"><strong>Things to consider:</strong> no quantitative measure is attached to Creative Sparks yet — the Cohort 1 teacher feedback document is also logged as a case study, cleared for Marketing use.</p>
+
+      <div class="prevnext">
+        <button onclick="go('steam')">← STEAM Programmes</button>
+        <button onclick="go('cases')">Case Studies →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= CASE STUDIES ================= -->
+<div class="page" id="page-cases">
+  <header class="hero region" style="--region-tint:#FDF3DD; --region-color:#B27F00;">
+    <div class="wrap">
+      <button class="backlink" onclick="go('overview')">← Back to overview</button>
+      <p class="eyebrow">Named stories</p>
+      <h1>Case Studies</h1>
+      <p class="hero-intro">
+        Stories from children, teachers, schools, caregivers and partners, linked back
+        to their source document on SharePoint. The permission tag shows what each
+        story is cleared to be used for.
+      </p>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <div class="filter-row" id="filterRow">
+        <button class="active" data-filter="all">All (16)</button>
+        <button data-filter="Child">Child</button>
+        <button data-filter="Teacher">Teacher</button>
+        <button data-filter="School">School</button>
+        <button data-filter="Caregiver">Caregiver</button>
+        <button data-filter="Partner">Partner</button>
+      </div>
+
+      <div class="case-grid" id="caseGrid">
+        <div class="case-card" data-stakeholder="Child">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:f:/r/sites/ExperienceandLearning2/Documents/Experience%20and%20Learning/06%20Impact/06%20Case%20studies/01.%20Case%20studies/Mason%27s%20Story?d=wda2b7fdc231c499d86c79a07d1793dcc&csf=1&web=1&e=aOIurJ" target="_blank" rel="noopener">Mason's Story</a>
+          <span class="case-meta">Child · Combined · 2023</span>
+          <div class="tag-row"><span class="perm-tag">No permission logged</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Child">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:f:/s/MarketingandCommunications/IgCfmxXFqedCQ7wvOfnQ6vhhAcpgvcnxdM-foezbca1B12Q?e=g5VBcV" target="_blank" rel="noopener">Nabil — St Lukes Primary School (video)</a>
+          <span class="case-meta">Child · STEAM Programmes · Talking Head Video · 2023</span>
+          <div class="tag-row"><span class="perm-tag">No permission logged</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Child">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:f:/s/MarketingandCommunications/IgCfmxXFqedCQ7wvOfnQ6vhhAcpgvcnxdM-foezbca1B12Q?e=g5VBcV" target="_blank" rel="noopener">Nabil — St Lukes Primary School (audio)</a>
+          <span class="case-meta">Child · STEAM Programmes · Audio · 2022</span>
+          <div class="tag-row"><span class="perm-tag">No permission logged</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Child">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:v:/s/MarketingandCommunications/IQAdeDqAZhSyVKcsr48l92VfAejvcs-L9ha2E1risp4AcFo?e=eJqsj1" target="_blank" rel="noopener">Big Build</a>
+          <span class="case-meta">Child · St Lukes Primary · Video · 2022</span>
+          <div class="tag-row"><span class="perm-tag">No permission logged</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Child">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:f:/s/MarketingandCommunications/IgCfmxXFqedCQ7wvOfnQ6vhhAcpgvcnxdM-foezbca1B12Q?e=g5VBcV" target="_blank" rel="noopener">Rachel — St Lukes Primary School (audio)</a>
+          <span class="case-meta">Child · STEAM Programmes · Audio · 2022</span>
+          <div class="tag-row"><span class="perm-tag">No permission logged</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Teacher">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:v:/s/ExperienceandLearning2/EXD6v_3FlEpLtaC-Q2pi0AwBIzw-hAyWKXyRFQOTJtYaSQ?e=3M7t18" target="_blank" rel="noopener">Samar Majeed — Bonner Primary School (video)</a>
+          <span class="case-meta">Teacher · Power of Play · 2025</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Teacher">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/sites/ExperienceandLearning2/Documents/Experience%20and%20Learning/01%20Programmes/2.%20Creative%20Sparks%20(Lerak)/Impact/Creative%20Sparks%20Cohort%201%20Teacher%20Feedback.docx?d=wd197fd6b7cc745eb8443af6f17bac249" target="_blank" rel="noopener">Creative Sparks Cohort 1 Feedback</a>
+          <span class="case-meta">Teacher · STEAM Programmes · 2025</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="School">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:w:/s/ExperienceandLearning2/IQAUw4icgswgTL-DVeCYP8YuAYDRtqRj-MCgELlCrkwEJXg?e=UqZyhi" target="_blank" rel="noopener">St Joseph's Primary School (Kasia Suliga)</a>
+          <span class="case-meta">School · STEAM Programmes · 2024</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="School">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:v:/s/MarketingandCommunications/IQAWmPslPf9nRp1EuwcF9iW8AUmHtXcLdJb55W-Xy4llqgQ?e=muNpS4" target="_blank" rel="noopener">Kasia Suliga — St Joseph's Primary School (video)</a>
+          <span class="case-meta">School · STEAM Programmes · 2024</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="School">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:w:/s/ExperienceandLearning2/IQA6iCUSd7TQRZEVNfOi47CfAfFL6R_5itDampk7vkMaZVA?e=U1wjlQ" target="_blank" rel="noopener">Hawley Primary School (Lucy Sahathevan)</a>
+          <span class="case-meta">School · STEAM Programmes · 2023</span>
+          <div class="tag-row"><span class="perm-tag funder">Funder only</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="School">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/sites/MarketingCommunication/Shared%20Documents/Case%20Studies/Case%20Study%20Kier%20Hardie.docx?d=w6fd74bc297df416ea4fbb42f590210ee" target="_blank" rel="noopener">Kier Hardie Primary School</a>
+          <span class="case-meta">School · STEAM Programmes · 2023</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Caregiver">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:w:/s/ExperienceandLearning2/EdWt33K8ZMVChVwYWecF3lsBEAnRq2ixx1Znr-ttODEKqQ?e=Dx6qNl" target="_blank" rel="noopener">Imogen (caregiver)</a>
+          <span class="case-meta">Caregiver · STEAM Programmes · 2024</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Caregiver">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:w:/s/ExperienceandLearning2/EZhGhqHPxgVHqbf849CL9qgBz4PCNyVGtc9vykmWtIcE0Q?e=CmlTRL" target="_blank" rel="noopener">Miriam (caregiver)</a>
+          <span class="case-meta">Caregiver · STEAM Programmes · 2023</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="Partner">
+          <a class="case-title" href="https://ioilondon.sharepoint.com/:w:/s/ExperienceandLearning2/EZgHmaHc9jhNunjBCjltufQBXqBQJdGUNs0kt-TXJ7MyBw?e=8wFT8v" target="_blank" rel="noopener">PoP Impact report</a>
+          <span class="case-meta">Partner · Power of Play · Report · 2024</span>
+          <div class="tag-row"><span class="perm-tag marketing">Marketing</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="">
+          <span class="case-title disabled">Marner Day of Play</span>
+          <span class="case-meta">Power of Play · Marner · 2026</span>
+          <div class="tag-row"><span class="perm-tag pending">In progress</span></div>
+        </div>
+        <div class="case-card" data-stakeholder="">
+          <span class="case-title disabled">Marco's Story</span>
+          <span class="case-meta">2026</span>
+          <div class="tag-row"><span class="perm-tag pending">In progress</span></div>
+        </div>
+      </div>
+
+      <p class="note"><strong>Archived:</strong> Grange Lane Primary School (School, STEAM Programmes, 2023) is filed separately as an archived/lost case study and isn't shown here.</p>
+
+      <div class="prevnext">
+        <button onclick="go('sparks')">← Creative Sparks</button>
+        <button onclick="go('overview')">Back to overview →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function go(page){
+    document.querySelectorAll('.page').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('nav.switcher button').forEach(function(b){ b.classList.remove('active'); });
+    var navBtn = document.querySelector('nav.switcher button[data-p="' + page + '"]');
+    if(navBtn) navBtn.classList.add('active');
+    window.scrollTo({top:0, behavior:'instant'});
+    history.replaceState(null, '', '#' + page);
+  }
+  var startPage = (location.hash || '#overview').replace('#','');
+  if(document.getElementById('page-' + startPage)){ go(startPage); } else { go('overview'); }
+
+  document.getElementById('filterRow').addEventListener('click', function(e){
+    var btn = e.target.closest('button');
+    if(!btn) return;
+    document.querySelectorAll('#filterRow button').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    var f = btn.dataset.filter;
+    document.querySelectorAll('#caseGrid .case-card').forEach(function(card){
+      if(f === 'all' || card.dataset.stakeholder === f){
+        card.removeAttribute('data-hidden');
+      } else {
+        card.setAttribute('data-hidden','true');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
