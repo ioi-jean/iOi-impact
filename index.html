@@ -87,8 +87,34 @@
   nav.switcher button[data-p="sparks"] { background: var(--orange); color: #fff; }
   nav.switcher button[data-p="sparks"] .dot { background: rgba(255,255,255,0.65); }
   nav.switcher button[data-p="cases"] { background: var(--yellow); color: #241f1c; }
+  nav.switcher button[data-p="pfaf"] { background: var(--brown); color: #fff; }
+  nav.switcher button[data-p="pfaf"] .dot { background: rgba(255,255,255,0.65); }
+  nav.switcher button[data-p="bbf"] { background: var(--pink); color: #241f1c; }
   nav.switcher button.active { opacity: 1; box-shadow: 0 0 0 2px rgba(42,37,33,0.55) inset; }
   nav.switcher button:not(.active) { opacity: 0.82; }
+
+  .completed-tag {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 700;
+    color: var(--teal); background: #fff; border: 1.5px solid var(--teal); padding: 5px 12px 5px 10px;
+    border-radius: 999px; margin-bottom: 14px;
+  }
+  .completed-tag .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+
+  /* ---------- PFAF region sub-switcher ---------- */
+  .subpage { display: none; }
+  .subpage.active { display: block; animation: rise 0.4s ease; }
+  nav.subswitcher { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+  nav.subswitcher button {
+    font-family: var(--font); border: none; cursor: pointer; font-weight: 600; font-size: 0.88rem;
+    padding: 9px 16px; border-radius: 999px; background: var(--panel); color: var(--ink);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  nav.subswitcher button:hover { transform: translateY(-2px); }
+  nav.subswitcher button.active { opacity: 1; box-shadow: 0 0 0 2px rgba(42,37,33,0.55) inset; }
+  nav.subswitcher button:not(.active) { opacity: 0.82; }
+  nav.subswitcher button[data-sub="belfast"].active { background: var(--purple); color: #fff; }
+  nav.subswitcher button[data-sub="towerhamlets"].active { background: var(--red); color: #fff; }
+  nav.subswitcher button[data-sub="doncaster"].active { background: var(--yellow); color: #241f1c; }
 
   .page { display: none; }
   .page.active { display: block; animation: rise 0.4s ease; }
@@ -241,6 +267,8 @@
       <button data-p="steam" onclick="go('steam')"><span class="dot"></span>STEAM Programmes</button>
       <button data-p="sparks" onclick="go('sparks')"><span class="dot"></span>Creative Sparks</button>
       <button data-p="cases" onclick="go('cases')"><span class="dot"></span>Case Studies</button>
+      <button data-p="pfaf" onclick="go('pfaf')"><span class="dot"></span>Playing for a Fairer Future</button>
+      <button data-p="bbf" onclick="go('bbf')"><span class="dot"></span>Building Brighter Futures</button>
     </nav>
   </div>
 </div>
@@ -295,6 +323,16 @@
           <span class="tile-tag">Stories</span>
           <span class="tile-name">Case Studies</span>
           <span class="tile-desc">Named stories from children, teachers, schools and partners, with permission status.</span>
+        </button>
+        <button class="prog-tile" style="background:var(--brown);" onclick="go('pfaf')">
+          <span class="tile-tag">5-year evaluation</span>
+          <span class="tile-name">Playing for a Fairer Future</span>
+          <span class="tile-desc">Belfast, Tower Hamlets and Doncaster — one Imagination Cycle, field notes by region.</span>
+        </button>
+        <button class="prog-tile" style="background:var(--pink); color:#241f1c;" onclick="go('bbf')">
+          <span class="tile-tag" style="opacity:0.7;">Completed project</span>
+          <span class="tile-name">Building Brighter Futures</span>
+          <span class="tile-desc" style="opacity:0.85;">Funded by the Aldgate &amp; Allhallows Foundation — co-design sessions and family events.</span>
         </button>
       </div>
     </div>
@@ -745,6 +783,353 @@
 
       <div class="prevnext">
         <button onclick="go('sparks')">← Creative Sparks</button>
+        <button onclick="go('overview')">Back to overview →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= PLAYING FOR A FAIRER FUTURE ================= -->
+<div class="page" id="page-pfaf">
+  <header class="hero region" style="--region-tint:#F1ECE6; --region-color:var(--brown);">
+    <div class="wrap">
+      <button class="backlink" onclick="go('overview')">← Back to overview</button>
+      <p class="eyebrow">National Lottery–funded, five years</p>
+      <h1>Playing for a Fairer Future</h1>
+      <p class="hero-intro">
+        One evaluation plan across three live regions — Belfast, Tower Hamlets and
+        Doncaster — sharing one Imagination Cycle (Listen&nbsp;›&nbsp;Ask, Create&nbsp;›&nbsp;Build,
+        Decide&nbsp;›&nbsp;Choose, Act&nbsp;›&nbsp;Do, Share&nbsp;›&nbsp;Show), adapted to each place, partner and age group.
+      </p>
+      <nav class="subswitcher" aria-label="PFAF regions">
+        <button data-sub="belfast" onclick="goSub('belfast')">West Belfast</button>
+        <button data-sub="towerhamlets" onclick="goSub('towerhamlets')">Tower Hamlets</button>
+        <button data-sub="doncaster" onclick="goSub('doncaster')">Doncaster</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ---- Belfast ---- -->
+  <section class="subpage" id="pfaf-belfast">
+    <div class="wrap">
+      <h2>West Belfast</h2>
+      <p class="section-lede">
+        Delivered with Blackie River Community Groups, led locally by Siobhan. Field
+        notes below are from the first weeks of sessions and a family drop-in day.
+      </p>
+
+      <div class="prog-card" style="border-left-color:var(--purple);">
+        <div class="prog-head">
+          <h3>Older kids &amp; repeat engagement</h3>
+          <span class="flex-tag" style="background:var(--purple);">Observation</span>
+        </div>
+        <div class="prog-block">
+          <ul>
+            <li>A group of older kids were seen playing for playing's sake — no task needed to keep them engaged.</li>
+            <li>One boy came back and made another robot — a repeat visitor, excited to build on what he'd made before and added more to it.</li>
+            <li>Still working out how to understand and reach engagement among older kids, including through schools.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:var(--purple);">
+        <div class="prog-head">
+          <h3>Parents &amp; carers</h3>
+          <span class="flex-tag" style="background:var(--purple);">Observation</span>
+        </div>
+        <div class="prog-block">
+          <p>A dad sat through the whole session with his child, and was interested enough afterwards to leave his work phone number — an opening for further involvement.</p>
+        </div>
+        <div class="prog-block">
+          <h4>Stories of change</h4>
+          <p>A mum on the Saturday session started out risk-averse and nervous, playing with the scissors — later that day she ended up upstairs confidently making a ship on her own. She has twins with autism and said she couldn't bring everyone together, but that the session had opened her mind to how she might introduce this kind of play at home. Several parents said they were &ldquo;trying this at home.&rdquo;</p>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:var(--purple);">
+        <div class="prog-head">
+          <h3>Widening thinking with the spoke</h3>
+          <span class="flex-tag" style="background:var(--purple);">Observation</span>
+        </div>
+        <div class="prog-block">
+          <p>Using the spoke got children finding metal in different places — widening how they think about materials. One child who'd been restless beforehand became fascinated and engrossed once engaged with it.</p>
+        </div>
+        <div class="prog-block">
+          <h4>Delivery adjustment</h4>
+          <p>Session hours were changed to run an afternoon slot specifically for training on how to use the spoke.</p>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:var(--purple);">
+        <div class="prog-head">
+          <h3>Materials in progress</h3>
+          <span class="flex-tag" style="background:var(--purple);">In development</span>
+        </div>
+        <div class="prog-block">
+          <p>A booklet of play ideas is being put together, including iOi's own material — junk art among it.</p>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:var(--purple);">
+        <div class="prog-head">
+          <h3>What's next</h3>
+          <span class="flex-tag" style="background:var(--purple);">Planning</span>
+        </div>
+        <div class="prog-block">
+          <ul>
+            <li>A summer scheme is being considered for next summer, running over a couple of weeks for 0–12 year olds.</li>
+            <li>Programme planning and dates are being set from September onwards.</li>
+            <li>Reaching different ages and reaching out to different groups.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- Tower Hamlets ---- -->
+  <section class="subpage" id="pfaf-towerhamlets">
+    <div class="wrap">
+      <h2>Tower Hamlets</h2>
+      <p class="section-lede">
+        Where Power of Play began. The longitudinal study hub and plan is being built
+        with Anne (SLT at Bonner Primary School) and Jen, scoping Bonner's involvement
+        in both the study and the Imagination Council.
+      </p>
+
+      <div class="prog-card" style="border-left-color:var(--red);">
+        <div class="prog-head">
+          <h3>Longitudinal study &amp; Bonner Primary School</h3>
+          <span class="flex-tag" style="background:var(--red);">In planning</span>
+        </div>
+        <div class="prog-block">
+          <p>Bonner Primary School's involvement in the longitudinal study, and in the Imagination Council, is being scoped with Anne and Jen. Tower Hamlets will run its own reporting rhythm, separate from West Belfast's.</p>
+        </div>
+        <div class="prog-block">
+          <h4>Things to consider</h4>
+          <p>No session-level field notes logged yet for this region — add observations here as sessions get underway.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- Doncaster ---- -->
+  <section class="subpage" id="pfaf-doncaster">
+    <div class="wrap">
+      <h2>Doncaster</h2>
+      <p class="section-lede">
+        Doncaster will run its own reporting rhythm, separate from West Belfast's.
+      </p>
+
+      <div class="prog-card" style="border-left-color:#B27F00;">
+        <div class="prog-head">
+          <h3>No observations logged yet</h3>
+          <span class="flex-tag" style="background:#B27F00;">Pending</span>
+        </div>
+        <div class="prog-block">
+          <p>Nothing session-level has been recorded for Doncaster so far — this page is ready for field notes as delivery starts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top: 1px solid rgba(42,37,33,0.08);">
+    <div class="wrap">
+      <div class="prevnext">
+        <button onclick="go('cases')">← Case Studies</button>
+        <button onclick="go('overview')">Back to overview →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function goSub(sub){
+    document.querySelectorAll('#page-pfaf .subpage').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById('pfaf-' + sub).classList.add('active');
+    document.querySelectorAll('nav.subswitcher button').forEach(function(b){ b.classList.remove('active'); });
+    var subBtn = document.querySelector('nav.subswitcher button[data-sub="' + sub + '"]');
+    if(subBtn) subBtn.classList.add('active');
+  }
+  goSub('belfast');
+</script>
+
+<!-- ================= BUILDING BRIGHTER FUTURES ================= -->
+<div class="page" id="page-bbf">
+  <header class="hero region" style="--region-tint:#FDF0F4; --region-color:#C24E7C;">
+    <div class="wrap">
+      <button class="backlink" onclick="go('overview')">← Back to overview</button>
+      <span class="completed-tag"><span class="dot"></span>Completed project · Impact Report 2026</span>
+      <h1>Building Brighter Futures</h1>
+      <p class="hero-intro">
+        Funded by the Aldgate &amp; Allhallows Foundation. Building Brighter Futures set
+        out to foster stronger family bonds and develop participants' creative skills
+        through shared, hands-on design challenges that build children's cognitive,
+        social and emotional skills — delivered with English Martyrs and Young V&amp;A.
+      </p>
+      <div class="stat-grid" style="--stat-color:#C24E7C;">
+        <div><strong>8</strong><span>student &amp; caregiver co-design sessions</span></div>
+        <div><strong>2</strong><span>immersive family workshops</span></div>
+        <div><strong>455</strong><span>participants — children, parents/carers and educators</span></div>
+        <div><strong>274</strong><span>Imagination Boxes distributed</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>What we did</h2>
+      <p class="section-lede">Three strands of activity, each designed to be co-created with the families taking part.</p>
+      <div class="prog-card" style="border-left-color:#C24E7C;">
+        <div class="prog-block">
+          <ul>
+            <li>Ran eight co-design sessions with students and caregivers using iOi activities to capture their insights on play.</li>
+            <li>Designed two STEAM-based immersive family events to encourage collaboration, problem-solving and play for families.</li>
+            <li>Shared Imagination Boxes with participants to encourage play at home.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 style="margin-top:36px;">Reach &amp; engagement</h2>
+      <div class="stat-grid" style="--stat-color:#C24E7C;">
+        <div><strong>344</strong><span>participants across co-design sessions</span></div>
+        <div><strong>111</strong><span>attendees at immersive family events</span></div>
+        <div><strong>253%</strong><span>increase in views of 'iOi at home' resources after delivery</span></div>
+        <div><strong>+89</strong><span>Net Promoter Score, caregiver engagement &amp; satisfaction</span></div>
+      </div>
+
+      <h2 style="margin-top:36px;">Community context</h2>
+      <p class="section-lede">DfE data: participating schools compared to the English national average.</p>
+      <div class="stat-grid" style="--stat-color:var(--brown);">
+        <div><strong>85%</strong><span>more pupils with SEN EHCPs</span></div>
+        <div><strong>14%</strong><span>more pupils receiving SEN support</span></div>
+        <div><strong>246%</strong><span>more pupils whose first language isn't English</span></div>
+        <div><strong>53%</strong><span>more pupils who had been eligible for free school meals in the last 6 years</span></div>
+      </div>
+
+      <h2 style="margin-top:36px;">Creative thinking &amp; holistic skills</h2>
+      <div class="stat-grid" style="--stat-color:#C24E7C;">
+        <div><strong>15%</strong><span>increase in children's creative thinking (DAT measurement)</span></div>
+        <div><strong>35%</strong><span>average increase across holistic skill development</span></div>
+      </div>
+      <p class="note" style="margin-top:18px;"><strong>Children were more likely to report increased confidence in (LEGO Children's Tool measurement):</strong> thinking of different ideas (43%), solving problems (69%), building things (54%), exploring new things (35%), communicating ideas to others (32%), using things they've learnt to help them (11%), trying even if things are hard (4%).</p>
+
+      <div class="prog-card" style="border-left-color:#C24E7C; margin-top:28px;">
+        <div class="prog-head">
+          <h3>Our outcomes</h3>
+        </div>
+        <div class="prog-block">
+          <ul>
+            <li>Increase creative thinking skills</li>
+            <li>Increase holistic skills development</li>
+            <li>Increase levels of caregiver satisfaction &amp; advocacy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>What we learned</h2>
+      <div class="prog-card" style="border-left-color:#C24E7C;">
+        <div class="prog-head">
+          <h3>Creative thinking &amp; holistic skills</h3>
+        </div>
+        <div class="prog-block">
+          <p>Creative learning acted as a vehicle for wider skills development. Alongside the 15% increase in creative thinking scores, LEGO Children's Tool results showed growth across problem-solving, communication, exploration and confidence in making and building. Facilitator observations further highlighted increased experimentation, creative risk-taking and perseverance.</p>
+        </div>
+        <div class="prog-block">
+          <p>High engagement and positive outcomes show the co-design approach successfully delivered inclusive and accessible opportunities for diverse families.</p>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:#C24E7C;">
+        <div class="prog-head">
+          <h3>Family relationships</h3>
+        </div>
+        <div class="prog-block">
+          <p>Children consistently expressed a desire for more opportunities to play and create with parents and carers. Findings suggest the value of creative family experiences lies less in the activity itself and more in creating dedicated time and space for families to collaborate, communicate and enjoy shared experiences together.</p>
+        </div>
+      </div>
+
+      <div class="prog-card" style="border-left-color:#C24E7C;">
+        <div class="prog-head">
+          <h3>Caregiver confidence</h3>
+        </div>
+        <div class="prog-block">
+          <p>Caregiver confidence, rather than interest, was often the primary barrier to creative activity at home. Parents and carers frequently spoke positively about creativity and recognised its importance, but mentioned barriers including time, mess, uncertainty and lack of ideas. The combination of co-design, family participation and take-home resources appeared effective in addressing these barriers and increasing confidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Co-design sessions</h2>
+      <p class="section-lede">Four sessions with students and educators, prompted to consider what play is to them, what they play with, and to create "play manifestos" — dream playhouses, storytelling, 3D cardboard prototyping and ScribbleBots. English Martyrs students co-designed a poster from the sessions.</p>
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;My mum doesn't draw very much with me. She thinks her drawings of mermaids aren't 'good enough'. I love them though.&rdquo;</blockquote>
+          <cite>Student</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;I wish we could have more time doing this.&rdquo;</blockquote>
+          <cite>Student</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;They're always on their phones. They're so naughty. I want them to put them down.&rdquo;</blockquote>
+          <cite>Student</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Caregiver sessions</h2>
+      <p class="section-lede">Four sessions with children and caregivers, moving from refined ideas, through tested ideas, to communicating their making.</p>
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;It's fun to sit down and draw.&rdquo;</blockquote>
+          <cite>Parent</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;I do go to museums, but not with children. I go with people my age. It's a nice respite.&rdquo;</blockquote>
+          <cite>Parent</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;Home isn't really seen as a place to be creative, or a creative space, with their families. It tends to be girls drawing by themselves, but isn't a thing they do together at home.&rdquo;</blockquote>
+          <cite>Facilitator observation</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Immersive family events</h2>
+      <p class="section-lede">Two co-designed STEAM-based events at Young V&amp;A and English Martyrs.</p>
+      <div class="quote-grid">
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;We would never do this at home, but coming here without all the distractions made us want to play.&rdquo;</blockquote>
+          <cite>Family</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;It's been great to be here today, I've not been since my childhood.&rdquo;</blockquote>
+          <cite>Parent</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;They knew it was us [iOi] and that's why they came today.&rdquo;</blockquote>
+          <cite>Facilitator observation</cite>
+        </div>
+        <div class="quote-card" style="border-left-color:#C24E7C;">
+          <blockquote>&ldquo;We don't always find the time to play at home... thank you.&rdquo;</blockquote>
+          <cite>Parent</cite>
+        </div>
+      </div>
+
+      <div class="prevnext" style="margin-top:32px;">
+        <button onclick="go('pfaf')">← Playing for a Fairer Future</button>
         <button onclick="go('overview')">Back to overview →</button>
       </div>
     </div>
